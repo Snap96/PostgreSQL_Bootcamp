@@ -142,3 +142,115 @@ SELECT * FROM table_characters;
 --	overall business logics
 
 --	Save the space whenever you can!!!!!
+
+-- Numbers Data types
+-- ##############################
+/*
+	1.	Numbers columns can hold various type numbers, but not NULL values.
+	2.  Math operators (adding, multiplying, divide etc.) can be performed on numbers data type
+	3.	Two main types of Numbers data are:
+		Integers							Whole numbers, both +ve and -ve
+		Fixed-point, floating point			Two format of fractions of whole numbers
+
+Integers
+=============
+
+
+	1.	Most common type
+
+	2. Three main types of integers
+			smallint			2bytes			-32768				to +32767
+			integer				4bytes			-2147483648			to +2147483647
+			bigint				8bytes			-9223372036854775808	to +9223372036854775807
+
+	3. bigint will be good enough for most of the situation if not all! Numbers larger than 2.1 billion
+
+	4. Database will give error if a number is outside of its data type range as per above table.
+
+	5. Auto-increment integer data type : SERIAL		An ANSI SQL standard for identity columns
+
+		For serial data type:
+			smallserial			2bytes			1 to 32767
+			serial				4bytes			1 to 2147483647
+			bigserial			8bytes			1 to 9223372036854775807
+*/
+
+-- Lets create a table with SERIAL data type
+
+CREATE TABLE table_serial(
+	product_id SERIAL,
+	product_name VARCHAR(100)
+);
+
+-- Lets insert some data
+
+INSERT INTO table_serial (product_name) VALUES
+('pen');
+
+SELECT * FROM table_serial;
+
+INSERT INTO table_serial(product_name) VALUES
+('pencil');
+
+INSERT INTO table_serial(product_name) VALUES
+('pencil2');
+
+
+/* 
+Decimal Number
+========================
+
+	1.	Decimal represent a whole number plus a fraction of a number
+
+	2.	The fraction is represented by digits following a decimal point
+
+	Fixed-point number
+	------------------
+
+	numeric(precision, scale)
+
+	precision			Maximum number of digits to left and right of the decimal point
+	scale				number of digits allowable on the right of the decimal point
+
+	decimal(precision, scale)
+
+	e.g. numeric(10,2) will return two digits to the right of the decimal points
+
+	Floating-point numbers
+	------------------------
+
+	Two types are;
+
+	real				allows precision to six decimal digits
+	double				allows precision to 15 decimal points of precision
+
+	unlike numeric, where we specify fixed precision and scale (e.g. numeric(10,2)), the decimal point in a given 
+	column can "float" depending on the number
+
+Data type				Storage Size				Storage type				Range
+------------			----------------			---------------				--------------
+numerical, decimal		variable					fixed point					Up to 131072 digits before the decimal point
+																				Up to 16383 digits after the decimal point
+
+real					4 bytes						floating point				6 decimal digits precision
+double precision		8 bytes						floating point				15 decimal digits precision
+*/
+
+
+
+-- lets create our numbers table
+
+CREATE TABLE table_numbers(
+	col_numeric numeric(20,5),
+	col_real real,
+	col_double double precision
+);
+
+SELECT * FROM table_numbers;
+
+INSERT INTO table_numbers (col_numeric, col_real, col_double) VALUES
+(.9,.9,.9),
+(3.13579, 3.13579, 3.13579),
+(4.1357987654, 4.1357987654, 4.1357987654);
+
+SELECT * FROM table_numbers;
