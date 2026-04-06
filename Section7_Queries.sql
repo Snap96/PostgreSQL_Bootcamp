@@ -254,3 +254,151 @@ INSERT INTO table_numbers (col_numeric, col_real, col_double) VALUES
 (4.1357987654, 4.1357987654, 4.1357987654);
 
 SELECT * FROM table_numbers;
+
+-- Selecting Number data type
+-- ################################
+
+/*
+	1. 	Use integers whenever possible.
+
+	2. 	Decimal data and caluclations needs to be exact, then use numeric or decimal
+		Float will save space, but be careful about exactness
+
+	3.	Choose a big enough number type by looking at your data.
+
+	4.	With big whole numbers, use bigint only if columns values constrained to fit into either smaller
+		integer or smallint types
+*/
+
+-- Date/Time data types
+-- #####################
+
+/*
+	1.	assigned to the variable that is supposed to store only the time value.
+
+	2.	One of the most important types
+
+	3.	Below is the date/time data types
+
+														Stores							low value							High value
+										Date			date only						4713 BC								294276 AD
+										Time			time only						4713 BC								5874897 AD
+										Timestap		Data and time					4713 BC								294276 AD
+										Timestaptz		Data, time and timestamp		4713 BC								294276 AD
+
+										Interval		Store values
+*/
+
+-- DATE data type
+-- ######################
+/*
+	1.	Stores date values
+
+	2.	Uses 4 bytes to store date value
+
+	3.	By default uses the format YYYY-MM-DD
+
+	4.	Some good useful keywords
+
+			CURRENT_DATE		Stores current date
+
+	5.	Column_name	DATE
+*/
+
+--	Lets create a sample table with a date data type
+
+CREATE TABLE table_dates(
+	id serial primary key,
+	employee_name varchar(100) NOT NULL,
+	hire_date DATE NOT NULL,
+	add_date DATE DEFAULT CURRENT_DATE
+);
+
+-- Lets insert some data
+INSERT INTO table_dates(employee_name, hire_date) VALUES
+('ADAM', '2020-01-01'),
+('LINDA', '202-02-01');
+
+-- Lets view the data
+SELECT * FROM table_dates;
+
+UPDATE table_dates
+SET hire_date = '2020-02-01'
+WHERE id = 2;
+
+-- Some useful functions
+
+-- current date, and time
+SELECT NOW();
+
+-- current date
+SELECT CURRENT_DATE;
+
+-- TIME Data type
+-- ##################
+
+/*
+	1.	stores the time of day values
+
+	2. 	take 8 bytes to stores time
+
+	3.	column_name TIME(precision)
+
+	4.	precision = number of fractional digits placed in the second field
+		precision up to 6 digits
+
+	5.	Common Formats
+		HH:MM
+		HH:MM:SS
+		HHMMSS
+
+		MM:SS.pppppp
+		HH:MM:SS.pppppp
+		HHMMSS.pppppp
+*/
+
+-- Lets create a smaple table
+
+CREATE TABLE table_time(
+	id serial primary key,
+	class_name varchar(100) NOT NULL,
+	start_time TIME NOT NULL,
+	end_time TIME NOT NULL
+);
+
+-- Lets insert some values
+INSERT INTO table_time(class_name, start_time, end_time) VALUES
+('MATH', '08:00:00', '09:00:00'),
+('CHEMISTRY', '09:01:00', '10:00:00');
+
+-- View the date
+SELECT * FROM table_time;
+
+-- Getting current time
+SELECT CURRENT_TIME;
+
+-- Getting current time with precision
+SELECT CURRENT_TIME(4);
+
+-- Use local time
+SELECT CURRENT_TIME, LOCALTIME;
+SELECT LOCALTIME, LOCALTIME(4);
+
+--Airthematic operations
+04:00
+10:00
+
+SELECT time '12:00' - time '04:00' as RESULT;
+
+-- Using Intervals
+
+n = number
+type = second, minute, hours, day, month, year...
+
+SELECT
+CURRENT_TIME,
+CURRENT_TIME + interval '2 hours' as result;
+
+SELECT
+CURRENT_TIME,
+CURRENT_TIME + interval '-2 hours' as result;
