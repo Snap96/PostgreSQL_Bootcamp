@@ -526,3 +526,151 @@ ALTER COLUMN product_id
 SET DEFAULT uuid_generate_v4();
 
 -- 6. Lets insert some more data
+
+
+-- Array data types
+-- #########################
+/*
+	1. 	Every data type has its own companion array type e.g.
+
+	- integer has an integer[] array type
+	- character has character[] array type
+
+	2. 	An array data type is named by appending square brackets ([]) to the data type name of array elements.
+
+		variable[]
+
+		phones TEXT[]
+
+		class_name VARCHAR[]
+		
+*/
+-- Lets create a sample table
+
+CREATE TABLE table_array(
+	id SERIAL,
+	name varchar(100),
+	phones text[] -- our array
+);
+
+-- View the data
+
+SELECT * FROM table_array;
+
+-- insert some sample data
+
+INSERT INTO table_array(name, phones)
+VALUES('Adam', ARRAY['(801)-123-4567','(819)-555-2222']);
+
+INSERT INTO table_array(name, phones)
+VALUES('Linda', ARRAY['(201)-123-4567','(214)-222-3333']);
+
+-- Query data
+
+SELECT * FROM table_array;
+
+SELECT 
+	name, phones[1]
+FROM table_array;
+
+SELECT 
+	name, phones[1]
+FROM table_array
+WHERE 
+	phones[2] = '(214)-222-3333'
+
+
+
+-- hstores data type
+-- #######################
+/*
+	1. hstores is a data type that store data into key-value pairs
+
+	2. The hstore module implements the hstore data type.
+
+	3. The keys and values are just text strings only.
+*/
+
+-- 1. Lets install hstore extensions first
+
+CREATE EXTENSION IF NOT EXISTS hstore;
+
+-- 2. Lets create our sample table
+
+CREATE TABLE table_hstore(
+	book_id SERIAL PRIMARY KEY,
+	title VARCHAR(100) NOT NULL,
+	book_info hstore
+);
+
+INSERT INTO table_hstore (title, book_info) VALUES
+(
+	'TITLE 2',
+	'
+		"publisher" => "ABC publisher2",
+		"paper_cost" => "20.00",
+		"e_cost" => "10.85"
+	'
+)
+
+-- 3. Lets query specific hstore value
+
+SELECT * FROM table_hstore;
+
+-- 4. Lets query specific hstore value
+-- -> operator
+SELECT 
+	book_info -> 'publisher' AS "publisher",
+	book_info -> 'e_cost' AS "Electronic_Cost"
+FROM table_hstore;
+
+
+-- JSON data type
+-- ######################
+/*
+	1. 	PostgreSQL has built-in support for JSON with a great range of processing functions and operators,
+		and complete indexing support.
+
+	2.	The JSON datatype is actually text under the hood, with a verification that the format is valid json
+		input... much like XML.
+
+	3.	The JSONB implemented a binary version of the JSON datatype
+
+	4.	The JSON datatype, being a text datatype, stores the data presentation exactly as it is sent to PostgreSQL,
+		including whitespace and indentation, and also multiple-keys when present
+		(no processing at all is done on the content, only form validation)
+
+	5.	The JSONB datatype is an advanced binary storage format with full processing, indexing and searching
+		capabilities, and as such pre-processes the JSON data to an internal format, which does include a single
+		value per key; and also isn't sensible to extra whitespace or indentation.
+*/
+
+-- 1. lets create a table
+CREATE TABLE table_json(
+	id SERIAL PRIMARY KEY,
+	docs JSON
+);
+
+SELECT * FROM table_json;
+
+-- 2. lets insert some data
+INSERT INTO table_json(docs) VALUES
+('[1,2,3,4,5,6,7]'),
+('[2,3,4,5,6,7]'),
+('{"Key":"Value"}');
+
+-- 3. Lets search the data
+SELECT
+	docs
+FROM table_json;
+
+-- 4. Search specific data in JSON column
+SELECT
+	docs
+FROM table_json
+WHERE docs @> '2';
+
+ALTER TABLE table_json
+ALTER COLUMN docs TYPE JSONB;
+
+CREATE INDEX ON table_json USING GIN(docs jsonb_path_ops);
